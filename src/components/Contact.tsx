@@ -14,14 +14,23 @@ export default function Contact() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+    formData.append("access_key", "2b286b53-4d04-471d-903a-e39e2142b90a");
+    formData.append("subject", "New Project Inquiry - Reislab BD");
 
-    // In production this posts to /api/inquiry which saves to Prisma/MySQL
-    // For now we simulate success
     try {
-      await new Promise((r) => setTimeout(r, 800));
-      console.log("Inquiry:", Object.fromEntries(formData));
-      setStatus("success");
-      form.reset();
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
     } catch {
       setStatus("error");
     }
